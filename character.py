@@ -18,16 +18,20 @@ class Character(pygame.sprite.Sprite):
         for i in range(7):
             img = pygame.transform.scale(pygame.image.load(f"images/Left{i}.png"), (width, height))
             self.image_left.append(img)
-        # setups up images
+        # setups up jumping images
         self.image_up = []
         for i in range(15):
             img = pygame.transform.scale(pygame.image.load(f"images/Jumping{i}.png"), (width, height))
             self.image_up.append(img)
+        # setups right side idle images
         self.image_idle = []
         for i in range(6):
             img = pygame.transform.scale(pygame.image.load(f"images/Idle{i}.png"), (width, height))
             self.image_idle.append(img)
 
+        #setups left side idle images
+
+    
         self.image = pygame.transform.scale(self.image_right[0], (width, height))  # Resize if needed
         self.rect = self.image.get_rect(topleft=(x, y))  # Position the sprite
         # movement variables

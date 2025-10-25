@@ -1,2 +1,4 @@
+make left side idle animation, add it
+
 make it sidescrolling
 make gameplay good first
