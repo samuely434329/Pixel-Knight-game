@@ -1,0 +1,2 @@
+make it sidescrolling
+make gameplay good first
