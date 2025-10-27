@@ -1,7 +1,7 @@
 import pygame
 
 clock = pygame.time.Clock()
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 
