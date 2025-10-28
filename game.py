@@ -6,7 +6,7 @@ from character import Character
 
 class Game:
     SCREEN_WIDTH = 1400
-    SCREEN_HEIGHT = 600
+    SCREEN_HEIGHT = 700
 
     def __init__(self):
         pygame.init()

@@ -1,8 +1,9 @@
 import pygame
 
 clock = pygame.time.Clock()
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 600
+#Screen borders should be same as game.py 
+SCREEN_WIDTH = 1400
+SCREEN_HEIGHT = 700
 
 
 class Character(pygame.sprite.Sprite):
@@ -18,16 +19,26 @@ class Character(pygame.sprite.Sprite):
         for i in range(7):
             img = pygame.transform.scale(pygame.image.load(f"images/Left{i}.png"), (width, height))
             self.image_left.append(img)
-        # setups up images
+        # setups up jumping images
         self.image_up = []
         for i in range(15):
             img = pygame.transform.scale(pygame.image.load(f"images/Jumping{i}.png"), (width, height))
             self.image_up.append(img)
-        self.image_idle = []
-        for i in range(6):
-            img = pygame.transform.scale(pygame.image.load(f"images/Idle{i}.png"), (width, height))
-            self.image_idle.append(img)
+        # setups right side idle images
+        self.image_idleRight = []
+        for i in range(1,7):
+            img = pygame.transform.scale(pygame.image.load(f"images/idleRight{i}.png"), (width, height))
+            self.image_idleRight.append(img)
 
+        self.image_idleLeft = []
+        for i in range(1,7):
+            img = pygame.transform.scale(pygame.image.load(f"images/idleLeft{i}.png"), (width, height))
+            self.image_idleLeft.append(img)
+
+
+        #setups left side idle images
+
+    
         self.image = pygame.transform.scale(self.image_right[0], (width, height))  # Resize if needed
         self.rect = self.image.get_rect(topleft=(x, y))  # Position the sprite
         # movement variables
@@ -43,6 +54,9 @@ class Character(pygame.sprite.Sprite):
         # animation variables
         self.animation_timer = 0
         self.frame_index = 0
+
+        self.lastDirection = "right"
+
         # combat variables
         self.player_health = 100
         self.player_damage = 50
@@ -60,6 +74,7 @@ class Character(pygame.sprite.Sprite):
             self.jump_index = 0
 
         elif self.current_keys[pygame.K_a] and self.rect.x > 0:
+            self.lastDirection = "left"
             self.rect.move_ip(-10, 0)
 
             self.animation_timer += 1
@@ -71,8 +86,9 @@ class Character(pygame.sprite.Sprite):
                     self.frame_index = 0
 
         elif self.current_keys[pygame.K_d] and self.rect.x < SCREEN_WIDTH - self.rect.width:
+            self.lastDirection = "right"
             self.rect.move_ip(10, 0)
-
+            
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
                 try:
@@ -80,12 +96,21 @@ class Character(pygame.sprite.Sprite):
                     self.frame_index += 1
                 except IndexError:
                     self.frame_index = 0
-        # when not moving
-        else:
+        # when not moving and on ground
+        elif self.on_ground and self.lastDirection == "right":
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
                 try:
-                    self.image = self.image_idle[self.frame_index]
+                    self.image = self.image_idleRight[self.frame_index]
+                    self.frame_index += 1
+                except IndexError:
+                    self.frame_index = 0
+
+        elif self.on_ground and self.lastDirection == "left":
+            self.animation_timer += 1
+            if self.animation_timer % 5 == 0:
+                try:
+                    self.image = self.image_idleLeft[self.frame_index]
                     self.frame_index += 1
                 except IndexError:
                     self.frame_index = 0
