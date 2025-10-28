@@ -1,7 +1,7 @@
 import pygame
 
 clock = pygame.time.Clock()
-#Screen borders should be same as game.py 
+#Screen borders should be same as game.py, prevents guy from going out of bounds
 SCREEN_WIDTH = 1400
 SCREEN_HEIGHT = 700
 
@@ -29,14 +29,14 @@ class Character(pygame.sprite.Sprite):
         for i in range(1,7):
             img = pygame.transform.scale(pygame.image.load(f"images/idleRight{i}.png"), (width, height))
             self.image_idleRight.append(img)
-
+        #setups left side idle images
         self.image_idleLeft = []
         for i in range(1,7):
             img = pygame.transform.scale(pygame.image.load(f"images/idleLeft{i}.png"), (width, height))
             self.image_idleLeft.append(img)
 
 
-        #setups left side idle images
+  
 
     
         self.image = pygame.transform.scale(self.image_right[0], (width, height))  # Resize if needed
