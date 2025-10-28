@@ -1,4 +1,6 @@
-make left side idle animation, add it
+make left side idle animation, add it (COMPLETED, SMOOTH OUT THOUGH)
 
+add levels
+platformer? or just combat?
 make it sidescrolling
 make gameplay good first
