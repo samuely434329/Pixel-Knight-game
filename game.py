@@ -24,7 +24,10 @@ class Game:
         #self.enemy = Enemy(50,50,50,50)
 
     def game_start(self):
+
+        # put all the stuff in init here so that __init__ wil just be for title screen?
         self.start()
+        
 
     def start(self):
         run = True
