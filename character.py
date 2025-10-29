@@ -35,10 +35,6 @@ class Character(pygame.sprite.Sprite):
             img = pygame.transform.scale(pygame.image.load(f"images/idleLeft{i}.png"), (width, height))
             self.image_idleLeft.append(img)
 
-
-  
-
-    
         self.image = pygame.transform.scale(self.image_right[0], (width, height))  # Resize if needed
         self.rect = self.image.get_rect(topleft=(x, y))  # Position the sprite
         # movement variables

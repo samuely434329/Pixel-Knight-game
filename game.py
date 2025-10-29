@@ -10,8 +10,41 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        self.background = pygame.image.load("images/castle_background.png")
+        #self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        #self.background = pygame.image.load("images/startScreen.jpg")
+        #self.screen.blit(self.background,(0,0))
+        #enemy stuff
+        #self.enemy = Enemy(50,50,50,50)
+
+    # opens startscreen, waits for start button click
+    def startScreen(self):
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.background = pygame.image.load("images/startScreen.jpg")
+        #self.screen.blit(self.background,(0,0))
+
+        #placeholder just for now
+        startButtonRect = pygame.Rect(100, 100, 500, 500)  # x, y, width, height
+
+        run = True
+        while run:
+            self.screen.blit(self.background,(300,0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos
+                    if startButtonRect.collidepoint(mouse_pos) and event.button == 1:  # Left mouse button
+                        #starts game when click on start button
+                        self.game_start()
+                        run = False
+            pygame.display.update()
+        pygame.quit()
+
+
+    #intializes game variables, calls main game loop
+    def game_start(self):
+        
+        self.background = pygame.image.load("images/castle_background.png")
         self.screen.blit(self.background,(0,0))
         self.all_sprites = pygame.sprite.Group()
         self.player = Character(300, 250, 100, 100, (250, 0, 0))
@@ -20,15 +53,10 @@ class Game:
         self.all_sprites.add(self.enemy)
         self.start_time = pygame.time.get_ticks()  # Get initial time
 
-        #enemy stuff
-        #self.enemy = Enemy(50,50,50,50)
-
-    def game_start(self):
-
         # put all the stuff in init here so that __init__ wil just be for title screen?
         self.start()
         
-
+    #is the main game loop
     def start(self):
         run = True
         while run:
