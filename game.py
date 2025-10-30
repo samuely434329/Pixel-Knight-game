@@ -16,9 +16,9 @@ class Game:
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.background = pygame.image.load("images/startScreen.jpg")
 
-        #placeholder just for now
-        startButtonRect = pygame.Rect(0, 0, 500, 500)  # x, y, width, height
-        startButtonRect.center = ( self.SCREEN_WIDTH // 2, self.SCREEN_WIDTH // 2)
+        #placeholder just for now                      #  275, 109     
+        startButtonRect = pygame.Rect(0, 0, 275, 109)  # x, y, width, height
+        startButtonRect.center = ( self.SCREEN_WIDTH // 2, self.SCREEN_WIDTH // 2 -250) # button slightly offset
 
         #updates startscreen, x button
         run = True
