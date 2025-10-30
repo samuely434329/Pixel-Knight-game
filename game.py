@@ -10,21 +10,17 @@ class Game:
 
     def __init__(self):
         pygame.init()
-        #self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-        #self.background = pygame.image.load("images/startScreen.jpg")
-        #self.screen.blit(self.background,(0,0))
-        #enemy stuff
-        #self.enemy = Enemy(50,50,50,50)
 
     # opens startscreen, waits for start button click
     def startScreen(self):
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.background = pygame.image.load("images/startScreen.jpg")
-        #self.screen.blit(self.background,(0,0))
 
         #placeholder just for now
-        startButtonRect = pygame.Rect(100, 100, 500, 500)  # x, y, width, height
+        startButtonRect = pygame.Rect(0, 0, 500, 500)  # x, y, width, height
+        startButtonRect.center = ( self.SCREEN_WIDTH // 2, self.SCREEN_WIDTH // 2)
 
+        #updates startscreen, x button
         run = True
         while run:
             self.screen.blit(self.background,(300,0))
