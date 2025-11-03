@@ -1,4 +1,6 @@
 make left side idle animation, add it (COMPLETED, SMOOTH OUT THOUGH)
+make left side jump animation
+
 
 loading screen
 

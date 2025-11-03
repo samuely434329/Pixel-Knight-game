@@ -43,7 +43,7 @@ class Game:
         self.background = pygame.image.load("images/castle_background.png")
         self.screen.blit(self.background,(0,0))
         self.all_sprites = pygame.sprite.Group()
-        self.player = Character(300, 250, 100, 100, (250, 0, 0))
+        self.player = Character(300, 250, 75, 75, (250, 0, 0))
         self.enemy = Enemy(50, 50, 50, 50)
         self.all_sprites.add(self.player)
         self.all_sprites.add(self.enemy)

@@ -10,33 +10,41 @@ class Character(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
         super().__init__()
         # setups right images
-        self.image_right = []
+        self.imageRight = []
         for i in range(7):
-            img = pygame.transform.scale(pygame.image.load(f"images/Right{i}.png"), (width, height))
-            self.image_right.append(img)
+            img = pygame.transform.scale(pygame.image.load(f"images/right/Right{i}.png"), (width, height))
+            self.imageRight.append(img)
         # setups left images
-        self.image_left = []
+        self.imageLeft = []
         for i in range(7):
-            img = pygame.transform.scale(pygame.image.load(f"images/Left{i}.png"), (width, height))
-            self.image_left.append(img)
-        # setups up jumping images
-        self.image_up = []
-        for i in range(15):
-            img = pygame.transform.scale(pygame.image.load(f"images/Jumping{i}.png"), (width, height))
-            self.image_up.append(img)
-        # setups right side idle images
-        self.image_idleRight = []
-        for i in range(1,7):
-            img = pygame.transform.scale(pygame.image.load(f"images/idleRight{i}.png"), (width, height))
-            self.image_idleRight.append(img)
-        #setups left side idle images
-        self.image_idleLeft = []
-        for i in range(1,7):
-            img = pygame.transform.scale(pygame.image.load(f"images/idleLeft{i}.png"), (width, height))
-            self.image_idleLeft.append(img)
+            img = pygame.transform.scale(pygame.image.load(f"images/left/Left{i}.png"), (width, height))
+            self.imageLeft.append(img)
+        # setups up right jumping images
+        self.imageRightJump = []
+        for i in range(1,16):
+            img = pygame.transform.scale(pygame.image.load(f"images/right/jumpingRight{i}.png"), (width, height))
+            self.imageRightJump.append(img)
+        # setups up left jumping images
+        self.imageLeftJump = []
+        for i in range(1,16):
+            img = pygame.transform.scale(pygame.image.load(f"images/left/jumpingLeft{i}.png"), (width, height))
+            self.imageLeftJump.append(img)
 
-        self.image = pygame.transform.scale(self.image_right[0], (width, height))  # Resize if needed
+        # setups right side idle images
+        self.imageIdleRight = []
+        for i in range(1,7):
+            img = pygame.transform.scale(pygame.image.load(f"images/right/idleRight{i}.png"), (width, height))
+            self.imageIdleRight.append(img)
+        #setups left side idle images
+        self.imageIdleLeft = []
+        for i in range(1,7):
+            img = pygame.transform.scale(pygame.image.load(f"images/left/idleLeft{i}.png"), (width, height))
+            self.imageIdleLeft.append(img)
+
+        #initial player image
+        self.image = pygame.transform.scale(self.imageRight[0], (width, height))  # Resize if needed
         self.rect = self.image.get_rect(topleft=(x, y))  # Position the sprite
+
         # movement variables
         self.current_keys = None  # ✅ Store key state
         self.speed = 1
@@ -76,7 +84,7 @@ class Character(pygame.sprite.Sprite):
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
                 try:
-                    self.image = self.image_left[self.frame_index]
+                    self.image = self.imageLeft[self.frame_index]
                     self.frame_index += 1
                 except IndexError:
                     self.frame_index = 0
@@ -88,7 +96,7 @@ class Character(pygame.sprite.Sprite):
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
                 try:
-                    self.image = self.image_right[self.frame_index]
+                    self.image = self.imageRight[self.frame_index]
                     self.frame_index += 1
                 except IndexError:
                     self.frame_index = 0
@@ -97,7 +105,7 @@ class Character(pygame.sprite.Sprite):
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
                 try:
-                    self.image = self.image_idleRight[self.frame_index]
+                    self.image = self.imageIdleRight[self.frame_index]
                     self.frame_index += 1
                 except IndexError:
                     self.frame_index = 0
@@ -106,7 +114,7 @@ class Character(pygame.sprite.Sprite):
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
                 try:
-                    self.image = self.image_idleLeft[self.frame_index]
+                    self.image = self.imageIdleLeft[self.frame_index]
                     self.frame_index += 1
                 except IndexError:
                     self.frame_index = 0
@@ -119,10 +127,20 @@ class Character(pygame.sprite.Sprite):
         # 49 ticks not on ground
         if not self.on_ground and not self.current_keys[pygame.K_a] and not self.current_keys[pygame.K_d]:
             self.jump_counter += 1
-            if self.jump_counter % (49 // 15) == 0:  # Change frame at intervals
-                self.jump_index = min(self.jump_index + 1, 14)  # Prevent going out of range
-                self.image = self.image_up[self.jump_index]  # Update sprite image
+            if self.jump_counter % (49 // 15) == 0 and self.lastDirection == "right":  # Change frame at intervals
 
+                #self.jump_index = (self.jump_index + 1) % 15
+
+                self.jump_index = min(self.jump_index+1, 14)  # Prevent going out of range
+                self.image = self.imageRightJump[self.jump_index]  # Update sprite image
+
+            elif self.jump_counter % (49 // 15) == 0 and self.lastDirection == "left":
+                #self.jump_index = (self.jump_index + 1) % 15
+
+                self.jump_index = min(self.jump_index +1, 14)  # Prevent going out of range
+                self.image = self.imageLeftJump[self.jump_index]  # Update sprite image
+
+        #optimize? onGround boolean?
         if self.rect.y >= SCREEN_HEIGHT - self.rect.height:
             self.rect.y = SCREEN_HEIGHT - self.rect.height
             self.vertical_speed = 0
