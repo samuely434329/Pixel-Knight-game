@@ -47,8 +47,8 @@ class Character(pygame.sprite.Sprite):
 
         # movement variables
         self.current_keys = None  # ✅ Store key state
-        self.speed = 1
-        self.initial_jump_height = -12
+        self.speed = 320
+        self.initial_jump_height = -16
         self.vertical_speed = 0
         self.gravity_number = 0.3
         self.is_jumping = False
@@ -65,13 +65,12 @@ class Character(pygame.sprite.Sprite):
         self.player_health = 100
         self.player_damage = 50
 
-    def update(self):
+    def update(self, delta_time):
         # self.current_keys = key  # ✅ Save key state for use in other methods
-        self.check_on_ground()
-        self.check_for_move()  # ✅ Now no need to pass 'key' explicitly
-        self.gravity()
+        self.check_for_move(delta_time)  # ✅ Now no need to pass 'key' explicitly
+        self.gravity(delta_time)
 
-    def check_for_move(self):
+    def check_for_move(self, delta_time):
         if self.current_keys[pygame.K_w] and self.on_ground:
             self.on_ground = False
             self.vertical_speed = self.initial_jump_height
@@ -79,7 +78,7 @@ class Character(pygame.sprite.Sprite):
 
         elif self.current_keys[pygame.K_a] and self.rect.x > 0:
             self.lastDirection = "left"
-            self.rect.move_ip(-10, 0)
+            self.rect.x -= self.speed * delta_time
 
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
@@ -91,7 +90,7 @@ class Character(pygame.sprite.Sprite):
 
         elif self.current_keys[pygame.K_d] and self.rect.x < SCREEN_WIDTH - self.rect.width:
             self.lastDirection = "right"
-            self.rect.move_ip(10, 0)
+            self.rect.x += self.speed * delta_time
             
             self.animation_timer += 1
             if self.animation_timer % 5 == 0:
@@ -103,7 +102,7 @@ class Character(pygame.sprite.Sprite):
         # when not moving and on ground
         elif self.on_ground and self.lastDirection == "right":
             self.animation_timer += 1
-            if self.animation_timer % 5 == 0:
+            if self.animation_timer % 10 == 0:
                 try:
                     self.image = self.imageIdleRight[self.frame_index]
                     self.frame_index += 1
@@ -112,43 +111,38 @@ class Character(pygame.sprite.Sprite):
 
         elif self.on_ground and self.lastDirection == "left":
             self.animation_timer += 1
-            if self.animation_timer % 5 == 0:
+            if self.animation_timer % 10 == 0:
                 try:
                     self.image = self.imageIdleLeft[self.frame_index]
                     self.frame_index += 1
                 except IndexError:
                     self.frame_index = 0
 
-    def gravity(self):
-        # checks for time here, longer time = higher speed
-        delta_time = clock.tick(60) / 10
-        self.vertical_speed += self.gravity_number * delta_time
-        self.rect.y += self.vertical_speed * delta_time
-        # 49 ticks not on ground
-        if not self.on_ground and not self.current_keys[pygame.K_a] and not self.current_keys[pygame.K_d]:
-            self.jump_counter += 1
-            if self.jump_counter % (49 // 15) == 0 and self.lastDirection == "right":  # Change frame at intervals
+    def gravity(self, delta_time):
+        # Apply gravity
+        self.vertical_speed += self.gravity_number * 100 * delta_time
+        self.rect.y += self.vertical_speed
 
-                #self.jump_index = (self.jump_index + 1) % 15
-
-                self.jump_index = min(self.jump_index+1, 14)  # Prevent going out of range
-                self.image = self.imageRightJump[self.jump_index]  # Update sprite image
-
-            elif self.jump_counter % (49 // 15) == 0 and self.lastDirection == "left":
-                #self.jump_index = (self.jump_index + 1) % 15
-
-                self.jump_index = min(self.jump_index +1, 14)  # Prevent going out of range
-                self.image = self.imageLeftJump[self.jump_index]  # Update sprite image
-
-        #optimize? onGround boolean?
+        # Check if player is on the ground
         if self.rect.y >= SCREEN_HEIGHT - self.rect.height:
             self.rect.y = SCREEN_HEIGHT - self.rect.height
             self.vertical_speed = 0
-            self.on_ground = True
-
-    def check_on_ground(self):
-        if self.rect.y >= SCREEN_HEIGHT - self.rect.height:
-            self.on_ground = True
-
-        elif self.rect.y < SCREEN_HEIGHT:
+            if not self.on_ground:
+                self.on_ground = True
+                self.jump_counter = 0
+                self.jump_index = 0
+        else:
             self.on_ground = False
+
+        # Update jump animation
+        if not self.on_ground:
+            self.jump_counter += 1
+            animation_speed = 3 # determines how fast the jump animation plays
+            
+            # Determine which set of jump images to use
+            jump_images = self.imageRightJump if self.lastDirection == "right" else self.imageLeftJump
+            
+            # Update the jump frame
+            if self.jump_counter % animation_speed == 0:
+                self.jump_index = min(self.jump_index + 1, len(jump_images) - 1)
+                self.image = jump_images[self.jump_index]

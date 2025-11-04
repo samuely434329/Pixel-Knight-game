@@ -55,16 +55,19 @@ class Game:
     #is the main game loop
     def start(self):
         run = True
+        clock = pygame.time.Clock()
         while run:
+            delta_time = clock.tick(60) / 1000.0
+
             #self.screen.fill((0, 0, 0))
             self.screen.blit(self.background,(-20,-220))
             key = pygame.key.get_pressed()  # ✅ Get key state once per frame
             self.player.current_keys = key  # ✅ Store key state in player instance
 
-            self.all_sprites.update()
+            self.all_sprites.update(delta_time)
             self.all_sprites.draw(self.screen)
             #updates movement, gravity,check on ground
-            self.player.update()
+            self.player.update(delta_time)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
