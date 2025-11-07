@@ -1,4 +1,5 @@
 import pygame
+from character import Character
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
@@ -10,5 +11,12 @@ class Enemy(pygame.sprite.Sprite):
 
         # combat stuff
         self.enemy_health = 100
-
-        
+        self.speed = 1
+    
+    def chase(self, character):
+        #move right 
+        if character.rect.x > self.rect.x:
+            self.rect.x += self.speed
+        #move left
+        elif character.rect.x < self.rect.x:
+            self.rect.x -= self.speed

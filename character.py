@@ -65,6 +65,14 @@ class Character(pygame.sprite.Sprite):
         self.player_health = 100
         self.player_damage = 50
 
+    # x accessor 
+    def x(self):
+        return self.rect.x
+    
+    # y accessor
+    def y(self):
+        return self.rect.y
+
     def update(self, delta_time):
         # self.current_keys = key  # ✅ Save key state for use in other methods
         self.check_for_move(delta_time)  # ✅ Now no need to pass 'key' explicitly
@@ -120,7 +128,7 @@ class Character(pygame.sprite.Sprite):
 
     def gravity(self, delta_time):
         # Apply gravity
-        self.vertical_speed += self.gravity_number * 100 * delta_time
+        self.vertical_speed += self.gravity_number * 80 * delta_time
         self.rect.y += self.vertical_speed
 
         # Check if player is on the ground
