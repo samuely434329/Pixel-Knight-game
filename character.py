@@ -65,6 +65,14 @@ class Character(pygame.sprite.Sprite):
         self.player_health = 100
         self.player_damage = 50
 
+    # x accessor 
+    def x(self):
+        return self.rect.x
+    
+    # y accessor
+    def y(self):
+        return self.rect.y
+
     def update(self, delta_time):
         # self.current_keys = key  # ✅ Save key state for use in other methods
         self.check_for_move(delta_time)  # ✅ Now no need to pass 'key' explicitly
