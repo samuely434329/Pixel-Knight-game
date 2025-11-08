@@ -120,7 +120,7 @@ class Character(pygame.sprite.Sprite):
 
     def gravity(self, delta_time):
         # Apply gravity
-        self.vertical_speed += self.gravity_number * 100 * delta_time
+        self.vertical_speed += self.gravity_number * 80 * delta_time
         self.rect.y += self.vertical_speed
 
         # Check if player is on the ground
