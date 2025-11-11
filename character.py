@@ -1,5 +1,5 @@
 import pygame
-
+import random
 clock = pygame.time.Clock()
 #Screen borders should be same as game.py, prevents guy from going out of bounds
 SCREEN_WIDTH = 1400
@@ -9,6 +9,13 @@ SCREEN_HEIGHT = 700
 class Character(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, color):
         super().__init__()
+
+        # setups jump sound effects
+        self.jumpSoundEffects = []
+        for i in range(5):  
+            sfx = pygame.mixer.Sound(f"sounds/jump{i}.wav")
+            self.jumpSoundEffects.append(sfx)
+
         # setups right images
         self.imageRight = []
         for i in range(7):
@@ -80,6 +87,7 @@ class Character(pygame.sprite.Sprite):
 
     def check_for_move(self, delta_time):
         if self.current_keys[pygame.K_w] and self.on_ground:
+            random.choice(self.jumpSoundEffects).play()
             self.on_ground = False
             self.vertical_speed = self.initial_jump_height
             self.jump_index = 0

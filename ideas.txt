@@ -1,6 +1,4 @@
-make left side idle animation, add it (COMPLETED, SMOOTH OUT THOUGH) ✓
-make left side jump animation completed ✓
-
+nov 10 start game sound effect
 nov 6 movement and jump speed is a little fast
 
 loading screen 

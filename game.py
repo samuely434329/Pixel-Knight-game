@@ -16,6 +16,8 @@ class Game:
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.background = pygame.image.load("images/startScreen.jpg")
 
+        startSoundEffect = pygame.mixer.Sound("sounds/startSoundEffect.wav")
+
         #placeholder just for now                      #  275, 109     
         startButtonRect = pygame.Rect(0, 0, 275, 109)  # x, y, width, height
         startButtonRect.center = ( self.SCREEN_WIDTH // 2, self.SCREEN_WIDTH // 2 -250) # button slightly offset
@@ -30,7 +32,8 @@ class Game:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = event.pos
                     if startButtonRect.collidepoint(mouse_pos) and event.button == 1:  # Left mouse button
-                        #starts game when click on start button
+                        #starts game, plays sound when click on start button
+                        startSoundEffect.play()
                         self.game_start()
                         run = False
             pygame.display.update()
