@@ -15,7 +15,6 @@ class Character(pygame.sprite.Sprite):
         for i in range(5):  
             sfx = pygame.mixer.Sound(f"sounds/jump{i}.wav")
             self.jumpSoundEffects.append(sfx)
-
         # setups right images
         self.imageRight = []
         for i in range(7):
@@ -82,10 +81,10 @@ class Character(pygame.sprite.Sprite):
 
     def update(self, delta_time):
         # self.current_keys = key  # ✅ Save key state for use in other methods
-        self.check_for_move(delta_time)  # ✅ Now no need to pass 'key' explicitly
+        self.check_for_keys(delta_time)  # ✅ Now no need to pass 'key' explicitly
         self.gravity(delta_time)
 
-    def check_for_move(self, delta_time):
+    def check_for_keys(self, delta_time):
         if self.current_keys[pygame.K_w] and self.on_ground:
             random.choice(self.jumpSoundEffects).play()
             self.on_ground = False
@@ -165,7 +164,7 @@ class Character(pygame.sprite.Sprite):
 
     def attack(self, enemy):
         #play animation
-
+        
         #if facing left
         if self.lastDirection == "left":
             self.image = self.imageAttackLeft
