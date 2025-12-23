@@ -162,3 +162,14 @@ class Character(pygame.sprite.Sprite):
             if self.jump_counter % animation_speed == 0:
                 self.jump_index = min(self.jump_index + 1, len(jump_images) - 1)
                 self.image = jump_images[self.jump_index]
+
+    def attack(self, enemy):
+        #play animation
+
+        #if facing left
+        if self.lastDirection == "left":
+            self.image = self.imageAttackLeft
+        else:
+            self.image = self.imageAttackRight
+
+        enemy.enemy_health -= self.player_damage
