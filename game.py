@@ -5,22 +5,22 @@ from character import Character
 
 
 class Game:
-    SCREEN_WIDTH = 1400
-    SCREEN_HEIGHT = 700
+    screenWidth = 1400
+    screenHeight = 700
 
     def __init__(self):
         pygame.init()
+        self.screen = pygame.display.set_mode((self.screenWidth, self.screenHeight))
 
     # opens startscreen, waits for start button click
     def startScreen(self):
-        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-        self.background = pygame.image.load("images/startScreen.jpg")
+        self.background = pygame.image.load("images/startScreen.jpg").convert()
 
         startSoundEffect = pygame.mixer.Sound("sounds/startSoundEffect.wav")
 
         #placeholder just for now                      #  275, 109     
         startButtonRect = pygame.Rect(0, 0, 275, 109)  # x, y, width, height
-        startButtonRect.center = ( self.SCREEN_WIDTH // 2, self.SCREEN_WIDTH // 2 -250) # button slightly offset
+        startButtonRect.center = ( self.screenWidth // 2, self.screenWidth // 2 -250) # button slightly offset
 
         #updates startscreen, x button
         run = True
@@ -34,23 +34,23 @@ class Game:
                     if startButtonRect.collidepoint(mouse_pos) and event.button == 1:  # Left mouse button
                         #starts game, plays sound when click on start button
                         startSoundEffect.play()
-                        self.game_start()
+                        self.gameStart()
                         run = False
             pygame.display.update()
         pygame.quit()
 
 
     #intializes game variables, calls main game loop
-    def game_start(self):
+    def gameStart(self):
         
-        self.background = pygame.image.load("images/castle_background.png")
+        self.background = pygame.image.load("images/castle_background.png").convert()
         self.screen.blit(self.background,(0,0))
-        self.all_sprites = pygame.sprite.Group()
+        self.allSprites = pygame.sprite.Group()
         self.player = Character(300, 250, 75, 75, (250, 0, 0))
-        self.enemy = Enemy(50, 50, 50, 50)
-        self.all_sprites.add(self.player)
-        self.all_sprites.add(self.enemy)
-        self.start_time = pygame.time.get_ticks()  # Get initial time
+        self.enemy = Enemy(50, 50, 50, 50, (0, 0, 250), self.player)
+        self.allSprites.add(self.player)
+        self.allSprites.add(self.enemy)
+        self.startTime = pygame.time.get_ticks()  # Get initial time
 
         # put all the stuff in init here so that __init__ wil just be for title screen?
         self.start()
@@ -65,10 +65,10 @@ class Game:
             #self.screen.fill((0, 0, 0))
             self.screen.blit(self.background,(-20,-220))
             key = pygame.key.get_pressed()  # ✅ Get key state once per frame
-            self.player.current_keys = key  # ✅ Store key state in player instance
+            self.player.currentKeys = key  # ✅ Store key state in player instance
 
-            self.all_sprites.update(delta_time)
-            self.all_sprites.draw(self.screen)
+            self.allSprites.update(delta_time)
+            self.allSprites.draw(self.screen)
             #updates movement, gravity,check on ground
             self.player.update(delta_time)
             for event in pygame.event.get():
@@ -78,5 +78,3 @@ class Game:
         pygame.quit()
 
 
-game = Game()
-screen = pygame.display.set_mode((Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT))

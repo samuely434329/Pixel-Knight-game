@@ -2,8 +2,8 @@ import pygame
 import random
 clock = pygame.time.Clock()
 #Screen borders should be same as game.py, prevents guy from going out of bounds
-SCREEN_WIDTH = 1400
-SCREEN_HEIGHT = 700
+screenWidth = 1400
+screenHeight = 700
 
 
 class Character(pygame.sprite.Sprite):
@@ -47,29 +47,38 @@ class Character(pygame.sprite.Sprite):
             img = pygame.transform.scale(pygame.image.load(f"images/left/idleLeft{i}.png"), (width, height))
             self.imageIdleLeft.append(img)
 
+        # attack images
+        self.imageRightAttack = []
+        self.imageLeftAttack = []
+        for i in range(10):
+            rightImage = pygame.transform.scale(pygame.image.load(f"images/right/rightAttack{i}.png"), (width, height))
+            leftImage = pygame.transform.scale(pygame.image.load(f"images/left/leftAttack{i}.png"), (width, height))
+
+            self.imageRightAttack.append(rightImage)
+            self.imageLeftAttack.append(leftImage)
+        
         #initial player image
         self.image = pygame.transform.scale(self.imageRight[0], (width, height))  # Resize if needed
         self.rect = self.image.get_rect(topleft=(x, y))  # Position the sprite
 
         # movement variables
-        self.current_keys = None  # ✅ Store key state
-        self.speed = 340
-        self.initial_jump_height = -16
-        self.vertical_speed = 0
-        self.gravity_number = 0.3
-        self.is_jumping = False
-        self.on_ground = False
-        self.jump_index = 0  # Tracks which image is active
-        self.jump_counter = 0  # Counts how many times gravity has updated
+        self.currentKeys = None  # ✅ Store key state
+        self.speed = 320
+        self.initialJumpHeight = -16
+        self.verticalSpeed = 0
+        self.gravityNumber = 0.29 #0.3 initially
+        self.isJumping = False
+        self.onGround = False
+        self.jumpIndex = 0  # Tracks which image is active
+        self.jumpCounter = 0  # Counts how many times gravity has updated
         # animation variables
-        self.animation_timer = 0
-        self.frame_index = 0
-
+        self.animationTimer = 0
+        self.frameIndex = 0
         self.lastDirection = "right"
 
         # combat variables
-        self.player_health = 100
-        self.player_damage = 50
+        self.playerHealth = 100
+        self.playerDamage = 50
 
     # x accessor 
     def x(self):
@@ -81,89 +90,118 @@ class Character(pygame.sprite.Sprite):
 
     def update(self, delta_time):
         # self.current_keys = key  # ✅ Save key state for use in other methods
-        self.check_for_keys(delta_time)  # ✅ Now no need to pass 'key' explicitly
+        self.checkForKeys(delta_time)  # ✅ Now no need to pass 'key' explicitly
         self.gravity(delta_time)
 
-    def check_for_keys(self, delta_time):
-        if self.current_keys[pygame.K_w] and self.on_ground:
+    def checkForKeys(self, delta_time):
+        #jump
+        if self.currentKeys[pygame.K_w] and self.onGround:
             random.choice(self.jumpSoundEffects).play()
-            self.on_ground = False
-            self.vertical_speed = self.initial_jump_height
+            self.onGround = False
+            self.vertical_speed = self.initialJumpHeight
             self.jump_index = 0
 
-        elif self.current_keys[pygame.K_a] and self.rect.x > 0:
+        # move left
+        elif self.currentKeys[pygame.K_a] and self.rect.x > 0:
             self.lastDirection = "left"
             self.rect.x -= self.speed * delta_time
 
-            self.animation_timer += 1
-            if self.animation_timer % 5 == 0:
+            self.animationTimer += 1
+            if self.animationTimer % 5 == 0:
                 try:
-                    self.image = self.imageLeft[self.frame_index]
-                    self.frame_index += 1
+                    self.image = self.imageLeft[self.frameIndex]
+                    self.frameIndex += 1
                 except IndexError:
-                    self.frame_index = 0
-
-        elif self.current_keys[pygame.K_d] and self.rect.x < SCREEN_WIDTH - self.rect.width:
+                    self.frameIndex = 0
+        # move right
+        elif self.currentKeys[pygame.K_d] and self.rect.x < screenWidth - self.rect.width:
             self.lastDirection = "right"
             self.rect.x += self.speed * delta_time
             
-            self.animation_timer += 1
-            if self.animation_timer % 5 == 0:
+            self.animationTimer += 1
+            if self.animationTimer % 5 == 0:
                 try:
-                    self.image = self.imageRight[self.frame_index]
-                    self.frame_index += 1
+                    self.image = self.imageRight[self.frameIndex]
+                    self.frameIndex += 1
                 except IndexError:
-                    self.frame_index = 0
-        # when not moving and on ground
-        elif self.on_ground and self.lastDirection == "right":
-            self.animation_timer += 1
-            if self.animation_timer % 10 == 0:
-                try:
-                    self.image = self.imageIdleRight[self.frame_index]
-                    self.frame_index += 1
-                except IndexError:
-                    self.frame_index = 0
+                    self.frameIndex = 0
 
-        elif self.on_ground and self.lastDirection == "left":
-            self.animation_timer += 1
-            if self.animation_timer % 10 == 0:
-                try:
-                    self.image = self.imageIdleLeft[self.frame_index]
-                    self.frame_index += 1
-                except IndexError:
-                    self.frame_index = 0
+        # when facing right
+        elif self.lastDirection == "right":
+            # when press attack key
+            if self.currentKeys[pygame.K_d]:
+                self.animationTimer += 1
+                if self.animationTimer % 5 == 0:          
+                    try:
+                        self.image = self.imageRightAttack[self.frameIndex]
+                        self.frameIndex += 1
+                    except IndexError:
+                        self.frameIndex = 0
+            # when idle play right idle animation
+            elif self.onGround:
+                self.animationTimer += 1
+                if self.animationTimer % 10 == 0:
+                    try:
+                        self.image = self.imageIdleRight[self.frameIndex]
+                        self.frameIndex += 1
+                    except IndexError:
+                        self.frameIndex = 0
+           
+
+
+        # when facing left
+        elif self.lastDirection == "left":
+            # when press attack key
+            if self.currentKeys[pygame.K_f]:
+                self.animationTimer += 1
+                if self.animationTimer % 10 == 0:          
+                    try:
+                        self.image = self.imageLeftAttack[self.frameIndex]
+                        self.frameIndex += 1
+                    except IndexError:
+                        self.frameIndex = 0
+            #if idle play left idle animation
+            elif self.onGround:
+                self.animationTimer += 1
+                if self.animationTimer % 10 == 0:
+                    try:
+                        self.image = self.imageIdleLeft[self.frameIndex]
+                        self.frameIndex += 1
+                    except IndexError:
+                        self.frameIndex = 0
+    
 
     def gravity(self, delta_time):
         # Apply gravity
-        self.vertical_speed += self.gravity_number * 75 * delta_time
-        self.rect.y += self.vertical_speed
+        self.verticalSpeed += self.gravityNumber * 75 * delta_time
+        self.rect.y += self.verticalSpeed
 
         # Check if player is on the ground
-        if self.rect.y >= SCREEN_HEIGHT - self.rect.height:
-            self.rect.y = SCREEN_HEIGHT - self.rect.height
-            self.vertical_speed = 0
-            if not self.on_ground:
-                self.on_ground = True
-                self.jump_counter = 0
-                self.jump_index = 0
+        if self.rect.y >= screenHeight - self.rect.height:
+            self.rect.y = screenHeight - self.rect.height
+            self.verticalSpeed = 0
+            if not self.onGround:
+                self.onGround = True
+                self.jumpCounter = 0
+                self.jumpIndex = 0
         else:
-            self.on_ground = False
+            self.onGround = False
 
         # Update jump animation
-        if not self.on_ground:
-            self.jump_counter += 1
+        if not self.onGround:
+            self.jumpCounter += 1
             animation_speed = 3 # determines how fast the jump animation plays
             
             # Determine which set of jump images to use
             jump_images = self.imageRightJump if self.lastDirection == "right" else self.imageLeftJump
             
             # Update the jump frame
-            if self.jump_counter % animation_speed == 0:
-                self.jump_index = min(self.jump_index + 1, len(jump_images) - 1)
-                self.image = jump_images[self.jump_index]
+            if self.jumpCounter % animation_speed == 0:
+                self.jumpIndex = min(self.jumpIndex + 1, len(jump_images) - 1)
+                self.image = jump_images[self.jumpIndex]
 
     def attack(self, enemy):
-        #play animation
+        #play animation first
         
         #if facing left
         if self.lastDirection == "left":
@@ -171,4 +209,4 @@ class Character(pygame.sprite.Sprite):
         else:
             self.image = self.imageAttackRight
 
-        enemy.enemy_health -= self.player_damage
+        enemy.enemyHealth -= self.playerDamage
