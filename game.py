@@ -46,8 +46,8 @@ class Game:
         self.background = pygame.image.load("images/castle_background.png").convert()
         self.screen.blit(self.background,(0,0))
         self.allSprites = pygame.sprite.Group()
-        self.player = Character(300, 250, 75, 75, (250, 0, 0))
-        self.enemy = Enemy(50, 50, 50, 50, (0, 0, 250), self.player)
+        self.player = Character(300, self.screenHeight - 75, 75, 75, (250, 0, 0))
+        self.enemy = Enemy(50, self.screenHeight - 50, 50, 50, (0, 0, 250), self.player)
         self.allSprites.add(self.player)
         self.allSprites.add(self.enemy)
         self.startTime = pygame.time.get_ticks()  # Get initial time

@@ -98,7 +98,7 @@ class Character(pygame.sprite.Sprite):
         if self.currentKeys[pygame.K_w] and self.onGround:
             random.choice(self.jumpSoundEffects).play()
             self.onGround = False
-            self.vertical_speed = self.initialJumpHeight
+            self.verticalSpeed = self.initialJumpHeight
             self.jump_index = 0
 
         # move left
@@ -129,14 +129,15 @@ class Character(pygame.sprite.Sprite):
         # when facing right
         elif self.lastDirection == "right":
             # when press attack key
-            if self.currentKeys[pygame.K_d]:
+            if self.currentKeys[pygame.K_f]:
                 self.animationTimer += 1
-                if self.animationTimer % 5 == 0:          
-                    try:
-                        self.image = self.imageRightAttack[self.frameIndex]
-                        self.frameIndex += 1
-                    except IndexError:
-                        self.frameIndex = 0
+                #cooldown for animation
+                # loop through it slowly (timer)       
+                try:
+                    self.image = self.imageRightAttack[self.frameIndex]
+                    self.frameIndex += 1
+                except IndexError:
+                    self.frameIndex = 0
             # when idle play right idle animation
             elif self.onGround:
                 self.animationTimer += 1
@@ -154,7 +155,7 @@ class Character(pygame.sprite.Sprite):
             # when press attack key
             if self.currentKeys[pygame.K_f]:
                 self.animationTimer += 1
-                if self.animationTimer % 10 == 0:          
+                if self.animationTimer % 5 == 0:          
                     try:
                         self.image = self.imageLeftAttack[self.frameIndex]
                         self.frameIndex += 1

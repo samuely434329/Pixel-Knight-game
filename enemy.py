@@ -32,7 +32,7 @@ class Enemy(Character):
         if self.rect.y-50 > self.player.rect.y and self.onGround:
             self.onGround = False
             self.verticalSpeed = self.initialJumpHeight+6
-            self.jump_index = 0
+            self.jumpIndex = 0
 
     def attackPlayer(self):
         if self.rect.x == self.player.rect.x:
