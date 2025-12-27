@@ -206,8 +206,8 @@ class Character(pygame.sprite.Sprite):
         
         #if facing left
         if self.lastDirection == "left":
-            self.image = self.imageAttackLeft
+            if(enemy.rect.x < self.rect.x and abs(enemy.rect.x - self.rect.x) < 50):
+                enemy.enemyHealth -= self.playerDamage
         else:
-            self.image = self.imageAttackRight
-
-        enemy.enemyHealth -= self.playerDamage
+            if(enemy.rect.x > self.rect.x and abs(enemy.rect.x - self.rect.x) < 50):
+                enemy.enemyHealth -= self.playerDamage
